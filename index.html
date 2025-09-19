@@ -3,383 +3,75 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Pipedrive CRM Form</title>
+    <title>Pipedrive CRM Integration</title>
     <style>
-        * {
-            box-sizing: border-box;
-            margin: 0;
-            padding: 0;
-            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
-        }
-        
         body {
-            background-color: #f5f7f9;
-            color: #333;
-            line-height: 1.5;
+            font-family: Arial, sans-serif;
+            margin: 0;
             padding: 20px;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            min-height: 100vh;
         }
-        
         .container {
+            max-width: 800px;
+            margin: 0 auto;
+        }
+        iframe {
             width: 100%;
-            max-width: 700px;
-            background: white;
-            border-radius: 10px;
-            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.08);
-            overflow: hidden;
+            height: 500px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
         }
-        
-        .header {
-            background: #ff7b00;
-            color: white;
-            padding: 20px;
-            text-align: center;
-        }
-        
-        .header h1 {
-            font-size: 22px;
-            font-weight: 600;
-        }
-        
-        .form-container {
-            padding: 30px;
-        }
-        
-        .section {
-            margin-bottom: 30px;
-            padding-bottom: 25px;
-            border-bottom: 1px solid #eaeef2;
-        }
-        
-        .section:last-child {
-            border-bottom: none;
-            margin-bottom: 0;
-            padding-bottom: 0;
-        }
-        
-        h2 {
-            font-size: 18px;
-            font-weight: 600;
-            margin-bottom: 20px;
-            color: #2d3a4b;
-        }
-        
-        .form-group {
-            margin-bottom: 20px;
-        }
-        
-        label {
-            display: block;
-            margin-bottom: 8px;
-            font-weight: 500;
-            color: #4d5a6d;
-            font-size: 14px;
-        }
-        
-        input, select, textarea {
-            width: 100%;
-            padding: 12px 15px;
-            border: 1px solid #d1d9e2;
-            border-radius: 6px;
-            font-size: 15px;
-            color: #2d3a4b;
-            background-color: #fafbfc;
-            transition: all 0.2s;
-        }
-        
-        input:focus, select:focus, textarea:focus {
-            outline: none;
-            border-color: #ff7b00;
-            background-color: #fff;
-            box-shadow: 0 0 0 3px rgba(255, 123, 0, 0.15);
-        }
-        
-        .row {
-            display: flex;
-            margin: 0 -10px;
-        }
-        
-        .col {
-            flex: 1;
-            padding: 0 10px;
-        }
-        
         button {
-            background: #ff7b00;
+            margin-top: 20px;
+            padding: 10px 20px;
+            background-color: #007bff;
             color: white;
             border: none;
-            padding: 14px 25px;
-            border-radius: 6px;
-            font-size: 16px;
-            font-weight: 600;
+            border-radius: 4px;
             cursor: pointer;
-            width: 100%;
-            transition: background 0.2s;
-            margin-top: 10px;
         }
-        
         button:hover {
-            background: #e06e00;
-        }
-        
-        .required::after {
-            content: " *";
-            color: #e22;
-        }
-        
-        .optional {
-            color: #8c94a0;
-            font-weight: 400;
-        }
-        
-        .divider {
-            height: 1px;
-            background: #eaeef2;
-            margin: 25px 0;
-        }
-        
-        @media (max-width: 600px) {
-            .row {
-                flex-direction: column;
-            }
-            
-            .col {
-                margin-bottom: 20px;
-            }
-            
-            .form-container {
-                padding: 20px;
-            }
+            background-color: #0056b3;
         }
     </style>
 </head>
 <body>
     <div class="container">
-        <div class="header">
-            <h1>Pipedrive CRM Form</h1>
-        </div>
+        <h1>Pipedrive CRM Integration</h1>
         
-        <div class="form-container">
-            <form id="crmForm">
-                <div class="section">
-                    <h2>Client details</h2>
-                    
-                    <div class="row">
-                        <div class="col">
-                            <div class="form-group">
-                                <label for="firstName" class="required">First name</label>
-                                <input type="text" id="firstName" required>
-                            </div>
-                        </div>
-                        <div class="col">
-                            <div class="form-group">
-                                <label for="lastName" class="required">Last name</label>
-                                <input type="text" id="lastName" required>
-                            </div>
-                        </div>
-                    </div>
-                    
-                    <div class="form-group">
-                        <label for="phone" class="required">Phone</label>
-                        <input type="tel" id="phone" required>
-                    </div>
-                    
-                    <div class="form-group">
-                        <label for="email">Email <span class="optional">(optional)</span></label>
-                        <input type="email" id="email">
-                    </div>
-                </div>
-                
-                <div class="divider"></div>
-                
-                <div class="section">
-                    <h2>Job details</h2>
-                    
-                    <div class="form-group">
-                        <label for="jobType" class="required">Job type</label>
-                        <select id="jobType" required>
-                            <option value="">Select job type</option>
-                            <option value="installation">Installation</option>
-                            <option value="repair">Repair</option>
-                            <option value="maintenance">Maintenance</option>
-                            <option value="inspection">Inspection</option>
-                        </select>
-                    </div>
-                    
-                    <div class="form-group">
-                        <label for="jobSource" class="required">Job source</label>
-                        <select id="jobSource" required>
-                            <option value="">Select job source</option>
-                            <option value="online">Online</option>
-                            <option value="referral">Referral</option>
-                            <option value="walk-in">Walk-in</option>
-                            <option value="phone">Phone</option>
-                        </select>
-                    </div>
-                    
-                    <div class="form-group">
-                        <label for="jobDescription">Job description <span class="optional">(optional)</span></label>
-                        <textarea id="jobDescription" rows="3"></textarea>
-                    </div>
-                </div>
-                
-                <div class="divider"></div>
-                
-                <div class="section">
-                    <h2>Service location</h2>
-                    
-                    <div class="form-group">
-                        <label for="address" class="required">Address</label>
-                        <input type="text" id="address" required>
-                    </div>
-                    
-                    <div class="row">
-                        <div class="col">
-                            <div class="form-group">
-                                <label for="city" class="required">City</label>
-                                <input type="text" id="city" required>
-                            </div>
-                        </div>
-                        <div class="col">
-                            <div class="form-group">
-                                <label for="state" class="required">State</label>
-                                <select id="state" required>
-                                    <option value="">Select state</option>
-                                    <option value="CA">California</option>
-                                    <option value="TX">Texas</option>
-                                    <option value="FL">Florida</option>
-                                    <option value="NY">New York</option>
-                                    <option value="WA">Washington</option>
-                                </select>
-                            </div>
-                        </div>
-                    </div>
-                    
-                    <div class="row">
-                        <div class="col">
-                            <div class="form-group">
-                                <label for="zipCode" class="required">Zip code</label>
-                                <input type="text" id="zipCode" required>
-                            </div>
-                        </div>
-                        <div class="col">
-                            <div class="form-group">
-                                <label for="area" class="required">Area</label>
-                                <select id="area" required>
-                                    <option value="">Select area</option>
-                                    <option value="north">North</option>
-                                    <option value="south">South</option>
-                                    <option value="east">East</option>
-                                    <option value="west">West</option>
-                                </select>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-                
-                <div class="divider"></div>
-                
-                <div class="section">
-                    <h2>Scheduled</h2>
-                    
-                    <div class="form-group">
-                        <label for="startDate" class="required">Start date</label>
-                        <input type="date" id="startDate" required>
-                    </div>
-                    
-                    <div class="row">
-                        <div class="col">
-                            <div class="form-group">
-                                <label for="startTime" class="required">Start time</label>
-                                <input type="time" id="startTime" required>
-                            </div>
-                        </div>
-                        <div class="col">
-                            <div class="form-group">
-                                <label for="endTime" class="required">End time</label>
-                                <input type="time" id="endTime" required>
-                            </div>
-                        </div>
-                    </div>
-                    
-                    <div class="form-group">
-                        <label for="testSelect" class="required">Test select</label>
-                        <select id="testSelect" required>
-                            <option value="">Select an option</option>
-                            <option value="option1">Option 1</option>
-                            <option value="option2">Option 2</option>
-                            <option value="option3">Option 3</option>
-                        </select>
-                    </div>
-                </div>
-                
-                <button type="submit">Save to Pipedrive</button>
-            </form>
-        </div>
+        <!-- Iframe for form -->
+        <iframe id="crmForm" src="about:blank"></iframe>
+        
+        <button onclick="saveToPipedrive()">Save to Pipedrive</button>
+        
+        <div id="status"></div>
     </div>
 
     <script>
-        // Form submission handler
-        document.getElementById('crmForm').addEventListener('submit', function(e) {
-            e.preventDefault();
+        // Initialize iframe with your form
+        document.getElementById('crmForm').src = 'your-form-url.html';
+        
+        // Function to get data from iframe (assuming you control the iframe content)
+        function getFormData() {
+            const iframe = document.getElementById('crmForm');
+            const iframeDoc = iframe.contentDocument || iframe.contentWindow.document;
             
-            // Basic validation
-            let isValid = true;
-            const requiredFields = this.querySelectorAll('[required]');
-            
-            requiredFields.forEach(field => {
-                if (!field.value.trim()) {
-                    isValid = false;
-                    field.style.borderColor = '#e22';
-                } else {
-                    field.style.borderColor = '#d1d9e2';
-                }
-            });
-            
-            if (!isValid) {
-                alert('Please fill in all required fields');
-                return;
-            }
-            
-            // In a real implementation, you would make an API call to Pipedrive here
-            alert('Form data would be sent to Pipedrive CRM in a real implementation');
-            
-            // For demonstration purposes, we'll just log the form data
+            // Example: Get form data - adjust selectors based on your form
             const formData = {
-                firstName: document.getElementById('firstName').value,
-                lastName: document.getElementById('lastName').value,
-                phone: document.getElementById('phone').value,
-                email: document.getElementById('email').value,
-                jobType: document.getElementById('jobType').value,
-                jobSource: document.getElementById('jobSource').value,
-                jobDescription: document.getElementById('jobDescription').value,
-                address: document.getElementById('address').value,
-                city: document.getElementById('city').value,
-                state: document.getElementById('state').value,
-                zipCode: document.getElementById('zipCode').value,
-                area: document.getElementById('area').value,
-                startDate: document.getElementById('startDate').value,
-                startTime: document.getElementById('startTime').value,
-                endTime: document.getElementById('endTime').value,
-                testSelect: document.getElementById('testSelect').value
+                title: iframeDoc.querySelector('#dealTitle')?.value || '',
+                value: iframeDoc.querySelector('#dealValue')?.value || '',
+                currency: iframeDoc.querySelector('#currency')?.value || 'USD',
+                person_name: iframeDoc.querySelector('#contactName')?.value || '',
+                person_email: iframeDoc.querySelector('#contactEmail')?.value || '',
+                org_name: iframeDoc.querySelector('#companyName')?.value || '',
+                phone: iframeDoc.querySelector('#phone')?.value || '',
+                custom_fields: {
+                    // Add your custom fields here
+                    custom_field1: iframeDoc.querySelector('#customField1')?.value || ''
+                }
             };
             
-            console.log('Form data to be sent to Pipedrive:', formData);
-        });
-        
-        // Set default date to today
-        const today = new Date();
-        const yyyy = today.getFullYear();
-        const mm = String(today.getMonth() + 1).padStart(2, '0');
-        const dd = String(today.getDate()).padStart(2, '0');
-        document.getElementById('startDate').value = `${yyyy}-${mm}-${dd}`;
-        
-        // Set default times
-        document.getElementById('startTime').value = '09:00';
-        document.getElementById('endTime').value = '17:00';
+            return formData;
+        }
     </script>
 </body>
 </html>
