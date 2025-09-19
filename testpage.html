@@ -1,18 +1,113 @@
-<html>
-  <head>
-    <title>Custom UI: Basic HTML example</title>
-    <link rel="stylesheet" href="style.css">
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Custom UI Panel</title>
+    <!-- Import Pipedrive App Extensions SDK from CDN -->
+    <script src="https://cdn.jsdelivr.net/npm/@pipedrive/app-extensions-sdk@0/dist/index.umd.js"></script>
+    <style>
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, sans-serif;
+            margin: 0;
+            padding: 15px;
+            background-color: var(--background-color, #fff);
+            color: var(--text-color, #333);
+        }
+        
+        .container {
+            max-width: 100%;
+        }
+        
+        h2 {
+            font-size: 16px;
+            margin-top: 0;
+            color: var(--primary-color, #2d6ff7);
+        }
+        
+        .data-item {
+            margin-bottom: 10px;
+            padding: 8px;
+            background-color: var(--card-background, #f8f9fa);
+            border-radius: 4px;
+        }
+        
+        .loading {
+            text-align: center;
+            padding: 20px;
+            color: #666;
+        }
+        
+        [data-theme="dark"] {
+            --background-color: #1e1e1e;
+            --text-color: #ffffff;
+            --card-background: #2d2d2d;
+            --primary-color: #4a90e2;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h2>Custom Information Panel</h2>
+        <div id="content">
+            <div class="loading">Loading data...</div>
+        </div>
+    </div>
 
-    <script src="https://cdn.jsdelivr.net/npm/@pipedrive/app-extensions-sdk@0.2.0-rc.0/dist/index.umd.js"></script>
     <script>
-      (async function () {
-        const sdk = await new AppExtensionsSdk().initialize();
-      })();
+        (async function() {
+            try {
+                // Initialize the Pipedrive SDK
+                const sdk = await new AppExtensionsSDK().initialize();
+                
+                // Apply user's theme preference
+                document.documentElement.setAttribute('data-theme', sdk.userSettings.theme);
+                
+                // Get context parameters from URL
+                const urlParams = new URLSearchParams(window.location.search);
+                const resourceType = urlParams.get('resource'); // deal, person, or organization
+                const resourceId = urlParams.get('selectedIds'); // ID of the current resource
+                
+                // Update content based on context
+                const contentDiv = document.getElementById('content');
+                
+                if (resourceType && resourceId) {
+                    contentDiv.innerHTML = `
+                        <div class="data-item">
+                            <strong>Resource Type:</strong> ${resourceType}
+                        </div>
+                        <div class="data-item">
+                            <strong>Resource ID:</strong> ${resourceId}
+                        </div>
+                        <div class="data-item">
+                            <strong>Current Time:</strong> ${new Date().toLocaleTimeString()}
+                        </div>
+                    `;
+                    
+                    // Example: Show a snackbar notification
+                    await sdk.execute(Command.SHOW_SNACKBAR, {
+                        message: 'Panel loaded successfully',
+                        link: {
+                            url: 'https://pipedrive.com',
+                            label: 'Visit Pipedrive'
+                        }
+                    });
+                } else {
+                    contentDiv.innerHTML = '<div class="data-item">No context information available</div>';
+                }
+                
+                // Example: Resize the panel to fit content
+                await sdk.execute(Command.RESIZE, { height: 200 });
+                
+            } catch (error) {
+                console.error('Error initializing SDK:', error);
+                document.getElementById('content').innerHTML = `
+                    <div class="data-item" style="color: red;">
+                        Error initializing Pipedrive SDK: ${error.message}
+                    </div>
+                `;
+            }
+        })();
     </script>
-  </head>
-
-  <body>
-    <h2>Hello from Custom UI</h2>
-    <p>Open any deal and Check the details section ?????</p>
-  </body>
+</body>
 </html>
