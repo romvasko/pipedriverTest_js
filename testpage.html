@@ -1,9 +1,9 @@
 <!DOCTYPE html>
-<html lang="ru">
+<html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Iframe Window Demo</title>
+    <title>Custom Panel with Iframe</title>
     <style>
         * {
             box-sizing: border-box;
@@ -11,125 +11,197 @@
             padding: 0;
         }
         body {
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            line-height: 1.6;
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, sans-serif;
+            background: #f8f9fa;
             color: #333;
-            background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+            line-height: 1.6;
             padding: 20px;
-            min-height: 100vh;
         }
         .container {
-            max-width: 1200px;
+            max-width: 1000px;
             margin: 0 auto;
             background: white;
-            border-radius: 15px;
-            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+            border-radius: 12px;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
             overflow: hidden;
         }
         header {
-            background: #4b6cb7;
+            background: linear-gradient(135deg, #6b73ff 0%, #000dff 100%);
             color: white;
-            padding: 20px;
+            padding: 25px;
             text-align: center;
         }
         h1 {
-            font-size: 2.5rem;
+            font-size: 2.2rem;
             margin-bottom: 10px;
         }
-        .content {
-            display: flex;
-            flex-wrap: wrap;
-            padding: 20px;
-            gap: 20px;
+        .description {
+            max-width: 800px;
+            margin: 20px auto;
+            padding: 0 20px;
+            text-align: center;
+            color: #666;
+            line-height: 1.8;
         }
-        .iframe-container {
-            flex: 1;
-            min-width: 300px;
-            border: 2px solid #ddd;
+        .panel-container {
+            padding: 30px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+        .panel {
+            width: 400px;
+            background: white;
+            border: 1px solid #e0e0e0;
             border-radius: 10px;
             overflow: hidden;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.08);
+            margin-bottom: 30px;
+        }
+        .panel-header {
+            background: #f7f7f7;
+            padding: 15px 20px;
+            border-bottom: 1px solid #e0e0e0;
+            font-weight: 600;
+            color: #444;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        .panel-content {
             background: white;
         }
-        .controls {
-            flex: 1;
-            min-width: 300px;
-            padding: 20px;
-            background: #f8f9fa;
-            border-radius: 10px;
+        .iframe-container {
+            position: relative;
+            overflow: hidden;
         }
         iframe {
             width: 100%;
-            height: 400px;
             border: none;
             display: block;
+        }
+        .controls {
+            background: #f9f9f9;
+            padding: 20px;
+            border-radius: 10px;
+            width: 400px;
+            margin-bottom: 20px;
         }
         .control-group {
             margin-bottom: 20px;
         }
-        h2 {
+        h3 {
             color: #4b6cb7;
             margin-bottom: 15px;
-            font-size: 1.5rem;
+            font-size: 1.3rem;
+        }
+        .slider-container {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+        input[type="range"] {
+            flex: 1;
+            height: 8px;
+            -webkit-appearance: none;
+            background: #e0e0e0;
+            border-radius: 4px;
+            outline: none;
+        }
+        input[type="range"]::-webkit-slider-thumb {
+            -webkit-appearance: none;
+            width: 20px;
+            height: 20px;
+            background: #4b6cb7;
+            border-radius: 50%;
+            cursor: pointer;
+        }
+        .height-value {
+            font-weight: 600;
+            color: #4b6cb7;
+            min-width: 50px;
+            text-align: center;
+        }
+        .url-input {
+            width: 100%;
+            padding: 12px 15px;
+            border: 2px solid #e0e0e0;
+            border-radius: 8px;
+            font-size: 1rem;
+            margin-bottom: 15px;
+            transition: border-color 0.3s;
+        }
+        .url-input:focus {
+            border-color: #4b6cb7;
+            outline: none;
         }
         .btn {
             display: inline-block;
-            padding: 10px 20px;
-            margin: 5px;
+            padding: 12px 25px;
             background: #4b6cb7;
             color: white;
             border: none;
-            border-radius: 5px;
+            border-radius: 8px;
             cursor: pointer;
             font-size: 1rem;
-            transition: background 0.3s;
+            font-weight: 600;
+            transition: all 0.3s;
         }
         .btn:hover {
             background: #3556a3;
+            transform: translateY(-2px);
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.15);
         }
-        .btn-danger {
-            background: #e74c3c;
-        }
-        .btn-danger:hover {
-            background: #c0392b;
-        }
-        .btn-success {
-            background: #2ecc71;
-        }
-        .btn-success:hover {
-            background: #27ae60;
-        }
-        .input-group {
-            margin-bottom: 15px;
-        }
-        label {
-            display: block;
-            margin-bottom: 5px;
-            font-weight: 600;
-        }
-        input[type="text"] {
+        .btn-full {
             width: 100%;
-            padding: 10px;
-            border: 2px solid #ddd;
-            border-radius: 5px;
-            font-size: 1rem;
         }
-        .message {
-            padding: 15px;
-            margin-top: 20px;
-            border-radius: 5px;
-            background: #e3f2fd;
-            border-left: 4px solid #4b6cb7;
+        .panel-examples {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 20px;
+            justify-content: center;
+            margin-top: 30px;
         }
-        footer {
-            text-align: center;
+        .example {
+            width: 190px;
             padding: 20px;
-            background: #f8f9fa;
+            background: white;
+            border-radius: 10px;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.08);
+            text-align: center;
+            cursor: pointer;
+            transition: transform 0.3s;
+        }
+        .example:hover {
+            transform: translateY(-5px);
+        }
+        .example h4 {
+            color: #4b6cb7;
+            margin-bottom: 10px;
+        }
+        .example p {
             color: #666;
             font-size: 0.9rem;
         }
-        @media (max-width: 768px) {
-            .content {
-                flex-direction: column;
+        footer {
+            text-align: center;
+            padding: 25px;
+            color: #666;
+            font-size: 0.9rem;
+            background: #f7f7f7;
+            margin-top: 30px;
+        }
+        .status {
+            padding: 10px 15px;
+            background: #e3f2fd;
+            border-radius: 6px;
+            margin-top: 15px;
+            font-size: 0.9rem;
+            color: #4b6cb7;
+        }
+        @media (max-width: 500px) {
+            .panel, .controls {
+                width: 100%;
             }
         }
     </style>
@@ -137,78 +209,167 @@
 <body>
     <div class="container">
         <header>
-            <h1>Iframe Window Demo</h1>
-            <p>Демонстрация работы с объектом window iframe</p>
+            <h1>Custom Panel with Iframe</h1>
+            <p>Fixed width panel with adjustable height</p>
         </header>
 
-        <div class="content">
-            <div class="iframe-container">
-                <iframe id="myIframe" src="about:blank" title="Demo Iframe"></iframe>
-            </div>
-            
+        <div class="panel-container">
             <div class="controls">
                 <div class="control-group">
-                    <h2>Загрузка контента</h2>
-                    <div class="input-group">
-                        <label for="iframeUrl">URL для загрузки:</label>
-                        <input type="text" id="iframeUrl" placeholder="https://example.com">
+                    <h3>Panel Height Control</h3>
+                    <div class="slider-container">
+                        <input type="range" id="heightSlider" min="100" max="750" value="400" step="10">
+                        <span id="heightValue" class="height-value">400px</span>
                     </div>
-                    <button class="btn" onclick="loadUrl()">Загрузить URL</button>
-                    <button class="btn" onclick="loadHtml()">Загрузить HTML</button>
+                    <div class="status" id="heightStatus">Valid height range: 100px-750px</div>
                 </div>
 
                 <div class="control-group">
-                    <h2>Управление iframe</h2>
-                    <button class="btn" onclick="postMessageToIframe()">Отправить сообщение</button>
-                    <button class="btn btn-success" onclick="getIframeContent()">Получить содержимое</button>
-                    <button class="btn btn-danger" onclick="reloadIframe()">Перезагрузить</button>
+                    <h3>Load Content</h3>
+                    <input type="text" id="iframeUrl" class="url-input" placeholder="Enter URL (e.g., https://example.com)">
+                    <button class="btn btn-full" onclick="loadUrl()">Load URL</button>
                 </div>
+            </div>
 
-                <div class="control-group">
-                    <h2>Свойства window</h2>
-                    <button class="btn" onclick="checkIframeProperties()">Проверить свойства</button>
+            <div class="panel">
+                <div class="panel-header">
+                    <span>Custom Panel</span>
+                    <span id="panelDimensions">400?400px</span>
                 </div>
+                <div class="panel-content">
+                    <div class="iframe-container">
+                        <iframe id="customPanel" src="about:blank" title="Custom Panel"></iframe>
+                    </div>
+                </div>
+            </div>
 
-                <div class="message" id="message">
-                    Сообщения и результаты будут отображаться здесь...
+            <div class="panel-examples">
+                <div class="example" onclick="setExample('min')">
+                    <h4>Min Height</h4>
+                    <p>100px</p>
+                </div>
+                <div class="example" onclick="setExample('medium')">
+                    <h4>Medium Height</h4>
+                    <p>400px</p>
+                </div>
+                <div class="example" onclick="setExample('max')">
+                    <h4>Max Height</h4>
+                    <p>750px</p>
+                </div>
+                <div class="example" onclick="setExample('custom')">
+                    <h4>Custom URL</h4>
+                    <p>Enter your own</p>
                 </div>
             </div>
         </div>
 
         <footer>
-            <p>Демонстрация работы с объектом window iframe &copy; 2023</p>
+            <p>Custom Panel with Iframe &copy; 2023 | Width: fixed, Height: 100px-750px</p>
         </footer>
     </div>
 
     <script>
-        const iframe = document.getElementById('myIframe');
-        const messageDiv = document.getElementById('message');
+        const iframe = document.getElementById('customPanel');
+        const heightSlider = document.getElementById('heightSlider');
+        const heightValue = document.getElementById('heightValue');
+        const heightStatus = document.getElementById('heightStatus');
+        const panelDimensions = document.getElementById('panelDimensions');
+        const urlInput = document.getElementById('iframeUrl');
 
-        function loadUrl() {
-            const url = document.getElementById('iframeUrl').value || 'https://example.com';
-            iframe.src = url;
-            showMessage(`Загружаем: ${url}`);
+        // Initialize
+        window.onload = function() {
+            loadDefaultContent();
+            updateIframeHeight(400);
+        };
+
+        // Update iframe height
+        heightSlider.addEventListener('input', function() {
+            const height = parseInt(this.value);
+            updateIframeHeight(height);
+        });
+
+        function updateIframeHeight(height) {
+            iframe.style.height = height + 'px';
+            heightValue.textContent = height + 'px';
+            panelDimensions.textContent = `400?${height}px`;
+            
+            // Validate height requirements
+            if (height < 100 || height > 750) {
+                heightStatus.textContent = 'Invalid height! Must be between 100px-750px';
+                heightStatus.style.background = '#ffebee';
+                heightStatus.style.color = '#e74c3c';
+            } else {
+                heightStatus.textContent = 'Valid height range: 100px-750px';
+                heightStatus.style.background = '#e3f2fd';
+                heightStatus.style.color = '#4b6cb7';
+            }
         }
 
-        function loadHtml() {
+        function loadUrl() {
+            const url = urlInput.value || 'https://example.com';
+            iframe.src = url;
+        }
+
+        function loadDefaultContent() {
             const htmlContent = `
                 <!DOCTYPE html>
                 <html>
                 <head>
-                    <title>Встроенная страница</title>
+                    <title>Embedded Panel</title>
                     <style>
                         body { 
-                            font-family: Arial, sans-serif; 
+                            font-family: -apple-system, BlinkMacSystemFont, sans-serif;
                             padding: 20px; 
-                            background: #f0f8ff; 
+                            background: #f8f9fa;
+                            color: #333;
                         }
-                        h1 { color: #4b6cb7; }
+                        .container {
+                            max-width: 100%;
+                            background: white;
+                            padding: 20px;
+                            border-radius: 10px;
+                            box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+                        }
+                        h1 { 
+                            color: #4b6cb7; 
+                            margin-bottom: 15px;
+                            font-size: 1.5rem;
+                        }
+                        p { 
+                            line-height: 1.6;
+                            margin-bottom: 15px;
+                        }
+                        .feature {
+                            padding: 10px;
+                            background: #e3f2fd;
+                            border-radius: 6px;
+                            margin-bottom: 10px;
+                            font-size: 0.9rem;
+                        }
+                        .button {
+                            display: inline-block;
+                            padding: 10px 15px;
+                            background: #4b6cb7;
+                            color: white;
+                            border: none;
+                            border-radius: 6px;
+                            cursor: pointer;
+                            font-size: 0.9rem;
+                        }
                     </style>
                 </head>
                 <body>
-                    <h1>Это страница внутри iframe!</h1>
-                    <p>Сгенерировано: ${new Date().toLocaleTimeString()}</p>
-                    <button onclick="alert('Привет из iframe!')">Нажми меня</button>
+                    <div class="container">
+                        <h1>Welcome to Custom Panel</h1>
+                        <p>This is demo content inside the iframe.</p>
+                        
+                        <div class="feature">? Fixed width: 400px</div>
+                        <div class="feature">? Adjustable height: 100px-750px</div>
+                        <div class="feature">? Responsive design</div>
+                        
+                        <p>Use the slider outside to adjust this panel's height.</p>
+                        <button class="button" onclick="alert('Action inside iframe!')">Test Button</button>
+                    </div>
                 </body>
                 </html>
             `;
@@ -217,74 +378,31 @@
             iframeDoc.open();
             iframeDoc.write(htmlContent);
             iframeDoc.close();
-            
-            showMessage('Загружен HTML контент');
         }
 
-        function postMessageToIframe() {
-            try {
-                iframe.contentWindow.postMessage({
-                    type: 'greeting',
-                    message: 'Привет из родительского окна!',
-                    time: new Date().toLocaleTimeString()
-                }, '*');
-                
-                showMessage('Сообщение отправлено в iframe');
-            } catch (e) {
-                showMessage('Ошибка отправки сообщения: ' + e.message, 'error');
+        function setExample(type) {
+            switch(type) {
+                case 'min':
+                    updateIframeHeight(100);
+                    heightSlider.value = 100;
+                    loadDefaultContent();
+                    break;
+                case 'medium':
+                    updateIframeHeight(400);
+                    heightSlider.value = 400;
+                    loadDefaultContent();
+                    break;
+                case 'max':
+                    updateIframeHeight(750);
+                    heightSlider.value = 750;
+                    loadDefaultContent();
+                    break;
+                case 'custom':
+                    urlInput.value = 'https://example.com';
+                    urlInput.focus();
+                    break;
             }
         }
-
-        function getIframeContent() {
-            try {
-                const iframeDoc = iframe.contentDocument || iframe.contentWindow.document;
-                const title = iframeDoc.title || 'Не определен';
-                const bodyText = iframeDoc.body ? iframeDoc.body.innerText.substring(0, 100) + '...' : 'Не доступно';
-                
-                showMessage(`Заголовок: ${title}<br>Содержимое: ${bodyText}`);
-            } catch (e) {
-                showMessage('Не удалось получить содержимое iframe из-за политики CORS', 'error');
-            }
-        }
-
-        function reloadIframe() {
-            iframe.src = iframe.src;
-            showMessage('Iframe перезагружен');
-        }
-
-        function checkIframeProperties() {
-            try {
-                const iframeWindow = iframe.contentWindow;
-                const props = {
-                    location: iframeWindow.location.href,
-                    innerWidth: iframeWindow.innerWidth,
-                    innerHeight: iframeWindow.innerHeight
-                };
-                
-                showMessage(`
-                    Свойства window iframe:<br>
-                    - location: ${props.location}<br>
-                    - innerWidth: ${props.innerWidth}px<br>
-                    - innerHeight: ${props.innerHeight}px
-                `);
-            } catch (e) {
-                showMessage('Не удалось получить свойства window из-за политики CORS', 'error');
-            }
-        }
-
-        function showMessage(msg, type = 'info') {
-            messageDiv.innerHTML = msg;
-            messageDiv.style.backgroundColor = type === 'error' ? '#ffebee' : '#e3f2fd';
-            messageDiv.style.borderLeftColor = type === 'error' ? '#e74c3c' : '#4b6cb7';
-        }
-
-        // Обработчик сообщений от iframe
-        window.addEventListener('message', function(event) {
-            showMessage(`Получено сообщение от iframe: ${event.data.message}`);
-        });
-
-        // Загружаем начальный контент
-        window.onload = loadHtml;
     </script>
 </body>
 </html>
