@@ -1,0 +1,304 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Pipedrive Custom UI Panel</title>
+    <script src="https://cdn.jsdelivr.net/npm/@pipedrive/app-extensions-sdk@0/dist/index.umd.js"></script>
+    <style>
+        :root {
+            --primary-color: #2d6ff7;
+            --background-color: #fff;
+            --text-color: #333;
+            --card-background: #f8f9fa;
+            --border-color: #e0e0e0;
+        }
+
+        [data-theme="dark"] {
+            --background-color: #1e1e1e;
+            --text-color: #ffffff;
+            --card-background: #2d2d2d;
+            --border-color: #404040;
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, sans-serif;
+            background-color: var(--background-color);
+            color: var(--text-color);
+            padding: 15px;
+            line-height: 1.5;
+        }
+
+        .container {
+            max-width: 100%;
+        }
+
+        .header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 15px;
+            padding-bottom: 10px;
+            border-bottom: 1px solid var(--border-color);
+        }
+
+        h2 {
+            font-size: 16px;
+            font-weight: 600;
+            color: var(--primary-color);
+        }
+
+        .card {
+            background-color: var(--card-background);
+            border-radius: 8px;
+            padding: 15px;
+            margin-bottom: 15px;
+            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+        }
+
+        .data-item {
+            margin-bottom: 10px;
+            display: flex;
+        }
+
+        .data-item strong {
+            min-width: 100px;
+            display: inline-block;
+        }
+
+        .btn {
+            background-color: var(--primary-color);
+            color: white;
+            border: none;
+            padding: 8px 16px;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 14px;
+            font-weight: 500;
+            transition: background-color 0.2s;
+        }
+
+        .btn:hover {
+            background-color: #1a56c9;
+        }
+
+        .loading {
+            text-align: center;
+            padding: 20px;
+            color: #666;
+        }
+
+        /* Modal styles */
+        .modal-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background-color: rgba(0, 0, 0, 0.5);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            z-index: 1000;
+            opacity: 0;
+            visibility: hidden;
+            transition: all 0.3s ease;
+        }
+
+        .modal-overlay.active {
+            opacity: 1;
+            visibility: visible;
+        }
+
+        .modal {
+            background-color: var(--background-color);
+            border-radius: 8px;
+            width: 90%;
+            max-width: 500px;
+            max-height: 80vh;
+            overflow-y: auto;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.15);
+            transform: translateY(-20px);
+            transition: transform 0.3s ease;
+        }
+
+        .modal-overlay.active .modal {
+            transform: translateY(0);
+        }
+
+        .modal-header {
+            padding: 15px 20px;
+            border-bottom: 1px solid var(--border-color);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .modal-header h3 {
+            font-size: 18px;
+            font-weight: 600;
+        }
+
+        .close-btn {
+            background: none;
+            border: none;
+            font-size: 20px;
+            cursor: pointer;
+            color: #999;
+        }
+
+        .close-btn:hover {
+            color: var(--text-color);
+        }
+
+        .modal-body {
+            padding: 20px;
+        }
+
+        .modal-footer {
+            padding: 15px 20px;
+            border-top: 1px solid var(--border-color);
+            text-align: right;
+        }
+
+        @media (max-width: 480px) {
+            .modal {
+                width: 95%;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h2>Custom Information Panel</h2>
+            <button class="btn" id="openModalBtn">Open Info</button>
+        </div>
+        
+        <div class="card">
+            <div id="content">
+                <div class="loading">Loading data...</div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal -->
+    <div class="modal-overlay" id="modalOverlay">
+        <div class="modal">
+            <div class="modal-header">
+                <h3>Additional Information</h3>
+                <button class="close-btn" id="closeModalBtn">&times;</button>
+            </div>
+            <div class="modal-body">
+                <p>This is a simple text displayed in a modal window. You can add any content here that you want to show when the user clicks the button.</p>
+                <p>For example, you might include:</p>
+                <ul style="margin-left: 20px; margin-top: 10px;">
+                    <li>Detailed information about the current record</li>
+                    <li>Additional options or settings</li>
+                    <li>Help text or instructions</li>
+                    <li>Related data from external sources</li>
+                </ul>
+            </div>
+            <div class="modal-footer">
+                <button class="btn" id="confirmBtn">Confirm</button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        (async function() {
+            try {
+                // Initialize the Pipedrive SDK
+                const sdk = await new AppExtensionsSDK().initialize();
+                
+                // Apply user's theme preference
+                document.documentElement.setAttribute('data-theme', sdk.userSettings.theme);
+                
+                // Get context parameters from URL
+                const urlParams = new URLSearchParams(window.location.search);
+                const resourceType = urlParams.get('resource'); // deal, person, or organization
+                const resourceId = urlParams.get('selectedIds'); // ID of the current resource
+                
+                // Update content based on context
+                const contentDiv = document.getElementById('content');
+                
+                if (resourceType && resourceId) {
+                    contentDiv.innerHTML = `
+                        <div class="data-item">
+                            <strong>Resource Type:</strong> ${resourceType}
+                        </div>
+                        <div class="data-item">
+                            <strong>Resource ID:</strong> ${resourceId}
+                        </div>
+                        <div class="data-item">
+                            <strong>Panel Loaded:</strong> ${new Date().toLocaleTimeString()}
+                        </div>
+                    `;
+                    
+                    // Show a snackbar notification
+                    await sdk.execute(Command.SHOW_SNACKBAR, {
+                        message: 'Panel loaded successfully',
+                        link: {
+                            url: 'https://pipedrive.com',
+                            label: 'Visit Pipedrive'
+                        }
+                    });
+                } else {
+                    contentDiv.innerHTML = '<div class="data-item">No context information available</div>';
+                }
+                
+                // Resize the panel to fit content
+                await sdk.execute(Command.RESIZE, { height: 200 });
+                
+            } catch (error) {
+                console.error('Error initializing SDK:', error);
+                document.getElementById('content').innerHTML = `
+                    <div class="data-item" style="color: red;">
+                        Error initializing Pipedrive SDK: ${error.message}
+                    </div>
+                `;
+            }
+        })();
+
+        // Modal functionality
+        const modalOverlay = document.getElementById('modalOverlay');
+        const openModalBtn = document.getElementById('openModalBtn');
+        const closeModalBtn = document.getElementById('closeModalBtn');
+        const confirmBtn = document.getElementById('confirmBtn');
+
+        function openModal() {
+            modalOverlay.classList.add('active');
+            document.body.style.overflow = 'hidden';
+        }
+
+        function closeModal() {
+            modalOverlay.classList.remove('active');
+            document.body.style.overflow = 'auto';
+        }
+
+        openModalBtn.addEventListener('click', openModal);
+        closeModalBtn.addEventListener('click', closeModal);
+        confirmBtn.addEventListener('click', closeModal);
+
+        // Close modal when clicking outside of it
+        modalOverlay.addEventListener('click', (e) => {
+            if (e.target === modalOverlay) {
+                closeModal();
+            }
+        });
+
+        // Close modal with Escape key
+        document.addEventListener('keydown', (e) => {
+            if (e.key === 'Escape' && modalOverlay.classList.contains('active')) {
+                closeModal();
+            }
+        });
+    </script>
+</body>
+</html>
