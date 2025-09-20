@@ -365,6 +365,11 @@
     </div>
 
     <script>
+
+        closeModalBtn.addEventListener('click', async function() {
+                    await sdk.execute(Command.CLOSE_MODAL);
+                });
+
         document.getElementById('pipedriveForm').addEventListener('submit', function(e) {
             e.preventDefault();
             
