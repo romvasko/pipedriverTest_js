@@ -179,15 +179,18 @@
         }
     </style>
     <script src="https://cdn.jsdelivr.net/npm/@pipedrive/app-extensions-sdk@0/dist/index.umd.js"></script>
-    <script>
-      (async function () {
-        const sdk = await new AppExtensionsSDK()
-  .initialize({ size: { width: 800 } });
-      })();
-    </script>
+
 
 </head>
 <body>
+        <script>
+      (async function () {
+        const sdk = await new AppExtensionsSDK( {identifier: 'db6f6128-06e7-43fd-a0c3-6e47122e72b9'})
+  .initialize({ size: { height: 800,
+                        width: 800
+   } });
+      })();
+    </script>
     <div class="container">
         <header>
             <h1>Client & Job Details</h1>
