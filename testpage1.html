@@ -3,301 +3,396 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Pipedrive Custom UI Panel</title>
-    <script src="https://cdn.jsdelivr.net/npm/@pipedrive/app-extensions-sdk@0/dist/index.umd.js"></script>
+    <title>Client & Job Details - Pipedrive</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
-        :root {
-            --primary-color: #2d6ff7;
-            --background-color: #fff;
-            --text-color: #333;
-            --card-background: #f8f9fa;
-            --border-color: #e0e0e0;
-        }
-
-        [data-theme="dark"] {
-            --background-color: #1e1e1e;
-            --text-color: #ffffff;
-            --card-background: #2d2d2d;
-            --border-color: #404040;
-        }
-
         * {
             box-sizing: border-box;
             margin: 0;
             padding: 0;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
         }
-
+        
         body {
-            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, sans-serif;
-            background-color: var(--background-color);
-            color: var(--text-color);
-            padding: 15px;
-            line-height: 1.5;
+            background-color: #f5f7f9;
+            color: #333;
+            line-height: 1.6;
+            padding: 20px;
         }
-
+        
         .container {
-            max-width: 100%;
+            max-width: 1000px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 10px;
+            box-shadow: 0 0 20px rgba(0, 0, 0, 0.1);
+            overflow: hidden;
         }
-
-        .header {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            margin-bottom: 15px;
+        
+        header {
+            background: #2d6ff7;
+            color: white;
+            padding: 20px;
+            text-align: center;
+        }
+        
+        header h1 {
+            font-size: 24px;
+            font-weight: 600;
+            margin-bottom: 5px;
+        }
+        
+        header p {
+            font-size: 14px;
+            opacity: 0.9;
+        }
+        
+        .form-container {
+            padding: 25px;
+        }
+        
+        .section {
+            margin-bottom: 30px;
+            padding-bottom: 20px;
+            border-bottom: 1px solid #eaeaea;
+        }
+        
+        .section-title {
+            font-size: 18px;
+            color: #2d6ff7;
+            margin-bottom: 20px;
             padding-bottom: 10px;
-            border-bottom: 1px solid var(--border-color);
+            border-bottom: 2px solid #f0f5ff;
+            display: flex;
+            align-items: center;
         }
-
-        h2 {
+        
+        .section-title i {
+            margin-right: 10px;
+            font-size: 20px;
+        }
+        
+        .form-row {
+            display: flex;
+            flex-wrap: wrap;
+            margin: 0 -10px 15px;
+        }
+        
+        .form-group {
+            flex: 1 0 calc(50% - 20px);
+            margin: 0 10px 15px;
+            min-width: 250px;
+        }
+        
+        .form-group.full-width {
+            flex: 1 0 calc(100% - 20px);
+        }
+        
+        label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: 500;
+            color: #444;
+            font-size: 14px;
+        }
+        
+        input, select, textarea {
+            width: 100%;
+            padding: 12px 15px;
+            border: 1px solid #ddd;
+            border-radius: 6px;
+            font-size: 15px;
+            transition: all 0.3s;
+        }
+        
+        input:focus, select:focus, textarea:focus {
+            outline: none;
+            border-color: #2d6ff7;
+            box-shadow: 0 0 0 3px rgba(45, 111, 247, 0.2);
+        }
+        
+        textarea {
+            min-height: 100px;
+            resize: vertical;
+        }
+        
+        .required::after {
+            content: " *";
+            color: #e22c2c;
+        }
+        
+        .button-group {
+            display: flex;
+            justify-content: flex-end;
+            gap: 15px;
+            margin-top: 20px;
+        }
+        
+        button {
+            padding: 12px 25px;
+            border: none;
+            border-radius: 6px;
             font-size: 16px;
             font-weight: 600;
-            color: var(--primary-color);
+            cursor: pointer;
+            transition: all 0.3s;
         }
-
-        .card {
-            background-color: var(--card-background);
-            border-radius: 8px;
-            padding: 15px;
-            margin-bottom: 15px;
-            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
-        }
-
-        .data-item {
-            margin-bottom: 10px;
-            display: flex;
-        }
-
-        .data-item strong {
-            min-width: 100px;
-            display: inline-block;
-        }
-
-        .btn {
-            background-color: var(--primary-color);
+        
+        .btn-submit {
+            background: #2d6ff7;
             color: white;
-            border: none;
-            padding: 8px 16px;
-            border-radius: 4px;
-            cursor: pointer;
-            font-size: 14px;
-            font-weight: 500;
-            transition: background-color 0.2s;
         }
-
-        .btn:hover {
-            background-color: #1a56c9;
+        
+        .btn-submit:hover {
+            background: #1c5cd6;
+            transform: translateY(-2px);
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
         }
-
-        .loading {
-            text-align: center;
-            padding: 20px;
-            color: #666;
+        
+        .btn-cancel {
+            background: #f1f5f9;
+            color: #64748b;
         }
-
-        /* Modal styles */
-        .modal-overlay {
-            position: fixed;
-            top: 0;
-            left: 0;
-            right: 0;
-            bottom: 0;
-            background-color: rgba(0, 0, 0, 0.5);
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            z-index: 1000;
-            opacity: 0;
-            visibility: hidden;
-            transition: all 0.3s ease;
+        
+        .btn-cancel:hover {
+            background: #e2e8f0;
         }
-
-        .modal-overlay.active {
-            opacity: 1;
-            visibility: visible;
-        }
-
-        .modal {
-            background-color: var(--background-color);
-            border-radius: 8px;
-            width: 90%;
-            max-width: 500px;
-            max-height: 80vh;
-            overflow-y: auto;
-            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.15);
-            transform: translateY(-20px);
-            transition: transform 0.3s ease;
-        }
-
-        .modal-overlay.active .modal {
-            transform: translateY(0);
-        }
-
-        .modal-header {
-            padding: 15px 20px;
-            border-bottom: 1px solid var(--border-color);
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-        }
-
-        .modal-header h3 {
-            font-size: 18px;
-            font-weight: 600;
-        }
-
-        .close-btn {
-            background: none;
-            border: none;
-            font-size: 20px;
-            cursor: pointer;
-            color: #999;
-        }
-
-        .close-btn:hover {
-            color: var(--text-color);
-        }
-
-        .modal-body {
-            padding: 20px;
-        }
-
-        .modal-footer {
-            padding: 15px 20px;
-            border-top: 1px solid var(--border-color);
-            text-align: right;
-        }
-
-        @media (max-width: 480px) {
-            .modal {
-                width: 95%;
+        
+        @media (max-width: 768px) {
+            .form-group {
+                flex: 1 0 calc(100% - 20px);
             }
+            
+            .button-group {
+                flex-direction: column;
+            }
+            
+            button {
+                width: 100%;
+            }
+        }
+        
+        .optional {
+            color: #888;
+            font-style: italic;
+            font-weight: normal;
         }
     </style>
 </head>
 <body>
     <div class="container">
-        <div class="header">
-            <h2>Custom Information Panel</h2>
-            <button class="btn" id="openModalBtn">Open Info</button>
-        </div>
+        <header>
+            <h1>Client & Job Details</h1>
+            <p>Please fill in the details below to create a new record in Pipedrive</p>
+        </header>
         
-        <div class="card">
-            <div id="content">
-                <div class="loading">Loading data...</div>
-            </div>
-        </div>
-    </div>
-
-    <!-- Modal -->
-    <div class="modal-overlay" id="modalOverlay">
-        <div class="modal">
-            <div class="modal-header">
-                <h3>Additional Information</h3>
-                <button class="close-btn" id="closeModalBtn">&times;</button>
-            </div>
-            <div class="modal-body">
-                <p>This is a simple text displayed in a modal window. You can add any content here that you want to show when the user clicks the button.</p>
-                <p>For example, you might include:</p>
-                <ul style="margin-left: 20px; margin-top: 10px;">
-                    <li>Detailed information about the current record</li>
-                    <li>Additional options or settings</li>
-                    <li>Help text or instructions</li>
-                    <li>Related data from external sources</li>
-                </ul>
-            </div>
-            <div class="modal-footer">
-                <button class="btn" id="confirmBtn">Confirm</button>
-            </div>
+        <div class="form-container">
+            <form id="pipedriveForm">
+                <!-- Client Details Section -->
+                <div class="section">
+                    <h2 class="section-title"><i class="fas fa-user"></i> Client details</h2>
+                    
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label for="firstName" class="required">First name</label>
+                            <input type="text" id="firstName" name="firstName" required>
+                        </div>
+                        
+                        <div class="form-group">
+                            <label for="lastName" class="required">Last name</label>
+                            <input type="text" id="lastName" name="lastName" required>
+                        </div>
+                    </div>
+                    
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label for="phone" class="required">Phone</label>
+                            <input type="tel" id="phone" name="phone" required>
+                        </div>
+                        
+                        <div class="form-group">
+                            <label for="email">Email <span class="optional">(optional)</span></label>
+                            <input type="email" id="email" name="email">
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Job Details Section -->
+                <div class="section">
+                    <h2 class="section-title"><i class="fas fa-briefcase"></i> Job details</h2>
+                    
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label for="jobType" class="required">Job type</label>
+                            <select id="jobType" name="jobType" required>
+                                <option value="">Select job type</option>
+                                <option value="installation">Installation</option>
+                                <option value="repair">Repair</option>
+                                <option value="maintenance">Maintenance</option>
+                                <option value="inspection">Inspection</option>
+                                <option value="consultation">Consultation</option>
+                            </select>
+                        </div>
+                        
+                        <div class="form-group">
+                            <label for="jobSource" class="required">Job source</label>
+                            <select id="jobSource" name="jobSource" required>
+                                <option value="">Select job source</option>
+                                <option value="online">Online</option>
+                                <option value="referral">Referral</option>
+                                <option value="walk-in">Walk-in</option>
+                                <option value="phone">Phone</option>
+                                <option value="email">Email</option>
+                            </select>
+                        </div>
+                    </div>
+                    
+                    <div class="form-row">
+                        <div class="form-group full-width">
+                            <label for="jobDescription">Job description <span class="optional">(optional)</span></label>
+                            <textarea id="jobDescription" name="jobDescription" placeholder="Describe the job requirements..."></textarea>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Service Location Section -->
+                <div class="section">
+                    <h2 class="section-title"><i class="fas fa-map-marker-alt"></i> Service location</h2>
+                    
+                    <div class="form-row">
+                        <div class="form-group full-width">
+                            <label for="address" class="required">Address</label>
+                            <input type="text" id="address" name="address" required>
+                        </div>
+                    </div>
+                    
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label for="city" class="required">City</label>
+                            <input type="text" id="city" name="city" required>
+                        </div>
+                        
+                        <div class="form-group">
+                            <label for="state" class="required">State</label>
+                            <select id="state" name="state" required>
+                                <option value="">Select state</option>
+                                <option value="AL">Alabama</option>
+                                <option value="AK">Alaska</option>
+                                <option value="AZ">Arizona</option>
+                                <option value="AR">Arkansas</option>
+                                <option value="CA">California</option>
+                                <option value="CO">Colorado</option>
+                                <option value="CT">Connecticut</option>
+                                <option value="DE">Delaware</option>
+                                <option value="FL">Florida</option>
+                                <option value="GA">Georgia</option>
+                                <!-- More states would be included in a real application -->
+                            </select>
+                        </div>
+                    </div>
+                    
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label for="zipCode" class="required">Zip code</label>
+                            <input type="text" id="zipCode" name="zipCode" required pattern="[0-9]{5}">
+                        </div>
+                        
+                        <div class="form-group">
+                            <label for="area" class="required">Area</label>
+                            <select id="area" name="area" required>
+                                <option value="">Select area</option>
+                                <option value="north">North</option>
+                                <option value="south">South</option>
+                                <option value="east">East</option>
+                                <option value="west">West</option>
+                                <option value="central">Central</option>
+                            </select>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Scheduled Section -->
+                <div class="section">
+                    <h2 class="section-title"><i class="fas fa-calendar-alt"></i> Scheduled</h2>
+                    
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label for="startDate" class="required">Start date</label>
+                            <input type="date" id="startDate" name="startDate" required>
+                        </div>
+                        
+                        <div class="form-group">
+                            <label for="startTime" class="required">Start time</label>
+                            <input type="time" id="startTime" name="startTime" required>
+                        </div>
+                    </div>
+                    
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label for="endTime" class="required">End time</label>
+                            <input type="time" id="endTime" name="endTime" required>
+                        </div>
+                        
+                        <div class="form-group">
+                            <label for="testSelect" class="required">Test select</label>
+                            <select id="testSelect" name="testSelect" required>
+                                <option value="">Select an option</option>
+                                <option value="option1">Option 1</option>
+                                <option value="option2">Option 2</option>
+                                <option value="option3">Option 3</option>
+                            </select>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="button-group">
+                    <button type="button" class="btn-cancel">Cancel</button>
+                    <button type="submit" class="btn-submit">Submit to Pipedrive</button>
+                </div>
+            </form>
         </div>
     </div>
 
     <script>
-        (async function() {
-            try {
-                // Initialize the Pipedrive SDK
-                const sdk = await new AppExtensionsSDK().initialize();
-                
-                // Apply user's theme preference
-                document.documentElement.setAttribute('data-theme', sdk.userSettings.theme);
-                
-                // Get context parameters from URL
-                const urlParams = new URLSearchParams(window.location.search);
-                const resourceType = urlParams.get('resource'); // deal, person, or organization
-                const resourceId = urlParams.get('selectedIds'); // ID of the current resource
-                
-                // Update content based on context
-                const contentDiv = document.getElementById('content');
-                
-                if (resourceType && resourceId) {
-                    contentDiv.innerHTML = `
-                        <div class="data-item">
-                            <strong>Resource Type:</strong> ${resourceType}
-                        </div>
-                        <div class="data-item">
-                            <strong>Resource ID:</strong> ${resourceId}
-                        </div>
-                        <div class="data-item">
-                            <strong>Panel Loaded:</strong> ${new Date().toLocaleTimeString()}
-                        </div>
-                    `;
-                    
-                    // Show a snackbar notification
-                    await sdk.execute(Command.SHOW_SNACKBAR, {
-                        message: 'Panel loaded successfully',
-                        link: {
-                            url: 'https://pipedrive.com',
-                            label: 'Visit Pipedrive'
-                        }
-                    });
+        document.getElementById('pipedriveForm').addEventListener('submit', function(e) {
+            e.preventDefault();
+            
+            // Basic validation
+            const requiredFields = document.querySelectorAll('[required]');
+            let valid = true;
+            
+            requiredFields.forEach(field => {
+                if (!field.value.trim()) {
+                    valid = false;
+                    field.style.borderColor = '#e22c2c';
                 } else {
-                    contentDiv.innerHTML = '<div class="data-item">No context information available</div>';
+                    field.style.borderColor = '#ddd';
                 }
+            });
+            
+            if (valid) {
+                // In a real implementation, this would send data to Pipedrive
+                alert('Form submitted successfully! This would send data to Pipedrive in a real implementation.');
                 
-                // Resize the panel to fit content
-                await sdk.execute(Command.RESIZE, { height: 200 });
-                
-            } catch (error) {
-                console.error('Error initializing SDK:', error);
-                document.getElementById('content').innerHTML = `
-                    <div class="data-item" style="color: red;">
-                        Error initializing Pipedrive SDK: ${error.message}
-                    </div>
-                `;
-            }
-        })();
-
-        // Modal functionality
-        const modalOverlay = document.getElementById('modalOverlay');
-        const openModalBtn = document.getElementById('openModalBtn');
-        const closeModalBtn = document.getElementById('closeModalBtn');
-        const confirmBtn = document.getElementById('confirmBtn');
-
-        function openModal() {
-            modalOverlay.classList.add('active');
-            document.body.style.overflow = 'hidden';
-        }
-
-        function closeModal() {
-            modalOverlay.classList.remove('active');
-            document.body.style.overflow = 'auto';
-        }
-
-        openModalBtn.addEventListener('click', openModal);
-        closeModalBtn.addEventListener('click', closeModal);
-        confirmBtn.addEventListener('click', closeModal);
-
-        // Close modal when clicking outside of it
-        modalOverlay.addEventListener('click', (e) => {
-            if (e.target === modalOverlay) {
-                closeModal();
+                // Here you would typically:
+                // 1. Gather form data
+                // 2. Send to your server or directly to Pipedrive API
+                // 3. Handle response
+            } else {
+                alert('Please fill in all required fields.');
             }
         });
-
-        // Close modal with Escape key
-        document.addEventListener('keydown', (e) => {
-            if (e.key === 'Escape' && modalOverlay.classList.contains('active')) {
-                closeModal();
-            }
+        
+        // Set minimum date to today
+        const today = new Date().toISOString().split('T')[0];
+        document.getElementById('startDate').setAttribute('min', today);
+        
+        // Add event listener to clear error state when typing
+        const inputs = document.querySelectorAll('input, select, textarea');
+        inputs.forEach(input => {
+            input.addEventListener('input', function() {
+                this.style.borderColor = '#ddd';
+            });
         });
     </script>
 </body>
