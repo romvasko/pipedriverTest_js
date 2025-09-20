@@ -357,7 +357,7 @@
                 </div>
                 
                 <div class="button-group">
-                    <button type="button" class="btn-cancel">Cancel</button>
+                    <button id="closeModalBtn" type="button" class="btn-cancel">Cancel</button>
                     <button type="submit" class="btn-submit">Submit to Pipedrive</button>
                 </div>
             </form>
@@ -368,6 +368,9 @@
         document.getElementById('pipedriveForm').addEventListener('submit', function(e) {
             e.preventDefault();
             
+            closeModalBtn.addEventListener('click', async function() {
+                    await sdk.execute(Command.CLOSE_MODAL);
+                });
             // Basic validation
             const requiredFields = document.querySelectorAll('[required]');
             let valid = true;
