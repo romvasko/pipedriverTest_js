@@ -366,16 +366,15 @@
 
     <script>
 
-        closeModalBtn.addEventListener('click', async function() {
+        closeModalBtn.addEventListener('click', async function(e) {
+                    e.preventDefault();
                     await sdk.execute(Command.CLOSE_MODAL);
                 });
 
         document.getElementById('pipedriveForm').addEventListener('submit', function(e) {
             e.preventDefault();
             
-            closeModalBtn.addEventListener('click', async function() {
-                    await sdk.execute(Command.CLOSE_MODAL);
-                });
+
             // Basic validation
             const requiredFields = document.querySelectorAll('[required]');
             let valid = true;
