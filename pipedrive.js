@@ -1,5 +1,9 @@
+import AppExtensionsSDK from '@pipedrive/app-extensions-sdk';
 
-
+const sdk = await new AppExtensionsSDK()
+  .initialize({ size: { height: 600,
+                        width: 800
+   } });
 
 const API_URL = 'https://none-sandbox.pipedrive.com/api/v2/deals';
 const BEARER_TOKEN = 'v1u:AQIBAHj-LzTNK2yuuuaLqifzhWb9crUNKTpk4FlQ9rjnXqp_6AE-mSRsNEc-qt-JZF1QvUyHAAAAfjB8BgkqhkiG9w0BBwagbzBtAgEAMGgGCSqGSIb3DQEHATAeBglghkgBZQMEAS4wEQQMGqcEIUgSSD15bcXPAgEQgDtLA6W-OJ_ytVMrWzkVH7tyBFy3C5ZLb1hgRXukifjFKHrPSN0XT5mLYmrNgQAPNro5MhWeqqjIaVI6zA:rGzH8j5QZxjnjOxM3HxbrBtz9M9O9T-Pu9IxOPSWz9Kzq93aBfCBxNMW6CiqFxme5SSB-SFPm2JQXjqSyWIfE91VD0AhVAiGk4C6v_1jeUXqLDfYTd8IGzCk0Q3JlF-ftNbI8VSWiQjeYTnn7t1px8PQtzq_q2HjvAVf2nBSCmSPkFprrigtG4PozdG3xCAq72Ue5pkVP3nQ3A2VTu0AsKzJ_OfPFOMdkePk-iyQvymCO4A93RTD1ezSq2ve8NNCRoAvzknWLXp9ugv0aaACXOJ-wjIPiqs-6A25'; 
@@ -65,7 +69,7 @@ document.getElementById('submitButton').addEventListener('click', function(e) {
     
 
     const formData = {
-        title: "Job" + crypto.randomUUID,
+        title: "Job" + crypto.randomUUID(),
         stage_id: 1,
         status: "open",
         owner_id: 24315226,
