@@ -123,10 +123,10 @@ function isPastDate(dateString) {
 // Modified createDeal function to accept data parameter
 async function createDeal(dealData) {
     try {
-        const response = await fetch('https://none-sandbox.pipedrive.com/api/v2/deals', {
+        const response = await fetch(API_URL, {
             method: 'POST',
             headers: {
-                'Authorization': 'Bearer your_bearer_token_here',
+                'Authorization': `Bearer ${BEARER_TOKEN}`,
                 'Content-Type': 'application/json'
             },
             body: JSON.stringify(dealData)
