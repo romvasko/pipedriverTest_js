@@ -138,7 +138,14 @@ async function createDeal(dealData) {
         if (result.data && result.data.id) {
             const dealId = result.data.id;
             const dealUrl = `https://none-sandbox.pipedrive.com/deal/${dealId}`;
-            window.open(dealUrl, '_blank');
+             //window.open(dealUrl, '_blank');
+             await sdk.execute(Command.SHOW_SNACKBAR, {
+  message: 'deal created',
+  link: {
+    url: dealUrl,
+    label: 'show deal',
+  },
+});
         } else {
             alert('Deal created successfully, but could not redirect to the deal page.');
         }
