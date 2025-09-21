@@ -1,4 +1,4 @@
-import AppExtensionsSDK from '@pipedrive/app-extensions-sdk';
+
 
 
 const API_URL = 'https://none-sandbox.pipedrive.com/api/v2/deals';
@@ -129,7 +129,7 @@ async function createDeal(dealData) {
         }
 
         const result = await response.json();
-        
+
         console.log('Deal created successfully:', result);
                 if (result.data && result.data.id) {
             const dealId = result.data.id;
