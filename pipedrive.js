@@ -63,15 +63,7 @@ document.getElementById('submitButton').addEventListener('click',async function(
     }
     
     if (!isValid) {
-
-      await sdk.execute(Command.SHOW_SNACKBAR, {
-  message: 'Please fix the following errors:\n\n' + errorMessage,
-    link: {
-    url: 'https://app.pipedrive.com',
-    label: 'View',
-  },
-        });
-        //alert('Please fix the following errors:\n\n' + errorMessage);
+        alert('Please fix the following errors:\n\n' + errorMessage);
         return;
     }
     
@@ -143,9 +135,10 @@ async function createDeal(dealData) {
         const result = await response.json();
 
         console.log('Deal created successfully:', result);
-                if (result.data && result.data.id) {
+        if (result.data && result.data.id) {
             const dealId = result.data.id;
-            window.location.href = `https://none-sandbox.pipedrive.com/deal/${dealId}`;
+            const dealUrl = `https://none-sandbox.pipedrive.com/deal/${dealId}`;
+            window.open(dealUrl, '_blank');
         } else {
             alert('Deal created successfully, but could not redirect to the deal page.');
         }
