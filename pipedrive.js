@@ -9,6 +9,8 @@ const sdk = await new AppExtensionsSDK({ identifier: 'db6f6128-06e7-43fd-a0c3-6e
 const API_URL = 'https://none-sandbox.pipedrive.com/api/v2/deals';
 const BEARER_TOKEN = 'v1u:AQIBAHj-LzTNK2yuuuaLqifzhWb9crUNKTpk4FlQ9rjnXqp_6AE-mSRsNEc-qt-JZF1QvUyHAAAAfjB8BgkqhkiG9w0BBwagbzBtAgEAMGgGCSqGSIb3DQEHATAeBglghkgBZQMEAS4wEQQMGqcEIUgSSD15bcXPAgEQgDtLA6W-OJ_ytVMrWzkVH7tyBFy3C5ZLb1hgRXukifjFKHrPSN0XT5mLYmrNgQAPNro5MhWeqqjIaVI6zA:WpD3z6VIZxgMmIaqiei45KURH3s0rLCpr8mID4gz8qtJnnAh0RQxffEl63COOxQJjvoOlEcnHOkAmxdCxQwqcu2FrZe4XQLLGRSAyi0hOQl3nEX_Ev_uYwnYVYLlfNsbRsmM4KncXCsORB1IW-QkBC6v5HU2yF6kikl0p37NlZmb3mojv2TYojnHyBnG4-9ozXGI0aGMwdMSBRe-Orw0cCguDsDO5ItUTgepuiYi0uzq5Ii52rPmcwVphk9oLWMMbR3920SOTwZSf_h4jcvv8WzMhkl1Jt-pflSX'; 
 
+
+
 const dealData = {
     "title": "I'm here",
     "stage_id": 1,
@@ -63,3 +65,7 @@ async function createDeal() {
         throw error;
     }
 }
+
+document.getElementById('submitButton').addEventListener('click', function() {
+    createDeal();
+});
