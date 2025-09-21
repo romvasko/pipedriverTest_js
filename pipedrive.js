@@ -61,6 +61,13 @@ async function createDeal() {
     }
 }
 
+function handleClick() {
+  alert("Button was clicked!");
+}
+
 document.getElementById('submitButton').addEventListener('click', function() {
     createDeal();
+});
+document.getElementById('testButton').addEventListener('click', function() {
+    handleClick();
 });
