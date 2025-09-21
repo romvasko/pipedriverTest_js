@@ -66,6 +66,10 @@ document.getElementById('submitButton').addEventListener('click',async function(
 
       await sdk.execute(Command.SHOW_SNACKBAR, {
   message: 'Please fix the following errors:\n\n' + errorMessage,
+    link: {
+    url: 'https://app.pipedrive.com',
+    label: 'View',
+  },
         });
         //alert('Please fix the following errors:\n\n' + errorMessage);
         return;
