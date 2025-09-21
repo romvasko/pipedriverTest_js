@@ -1,4 +1,4 @@
-
+import AppExtensionsSDK from '@pipedrive/app-extensions-sdk';
 
 
 const API_URL = 'https://none-sandbox.pipedrive.com/api/v2/deals';
@@ -17,7 +17,6 @@ document.getElementById('submitButton').addEventListener('click', function(e) {
     let isValid = true;
     let errorMessage = '';
     
-    // Check required fields
     requiredFields.forEach(fieldId => {
         const field = document.getElementById(fieldId);
         if (!field.value.trim()) {
@@ -29,7 +28,6 @@ document.getElementById('submitButton').addEventListener('click', function(e) {
         }
     });
     
-    // Validate email format if provided
     const email = document.getElementById('email').value;
     if (email && !isValidEmail(email)) {
         isValid = false;
@@ -37,7 +35,6 @@ document.getElementById('submitButton').addEventListener('click', function(e) {
         document.getElementById('email').style.borderColor = 'red';
     }
     
-    // Validate phone format
     const phone = document.getElementById('phone').value;
     if (phone && !isValidPhone(phone)) {
         isValid = false;
@@ -45,7 +42,6 @@ document.getElementById('submitButton').addEventListener('click', function(e) {
         document.getElementById('phone').style.borderColor = 'red';
     }
     
-    // Validate time logic (end time should be after start time)
     const startTime = document.getElementById('startTime').value;
     const endTime = document.getElementById('endTime').value;
     if (startTime && endTime && startTime >= endTime) {
@@ -55,7 +51,6 @@ document.getElementById('submitButton').addEventListener('click', function(e) {
         document.getElementById('endTime').style.borderColor = 'red';
     }
     
-    // Validate date is not in the past
     const startDate = document.getElementById('startDate').value;
     if (startDate && isPastDate(startDate)) {
         isValid = false;
@@ -68,9 +63,9 @@ document.getElementById('submitButton').addEventListener('click', function(e) {
         return;
     }
     
-    // Get form values if validation passed
+
     const formData = {
-        title: "Deal of the Century",
+        title: "Job" + crypto.randomUUID,
         stage_id: 1,
         status: "open",
         owner_id: 24315226,
@@ -98,11 +93,9 @@ document.getElementById('submitButton').addEventListener('click', function(e) {
         }
     };
     
-    // Call the createDeal function with the collected data
     createDeal(formData);
 });
 
-// Validation helper functions
 function isValidEmail(email) {
     const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
     return emailRegex.test(email);
@@ -120,7 +113,6 @@ function isPastDate(dateString) {
     return inputDate < today;
 }
 
-// Modified createDeal function to accept data parameter
 async function createDeal(dealData) {
     try {
         const response = await fetch(API_URL, {
@@ -137,8 +129,15 @@ async function createDeal(dealData) {
         }
 
         const result = await response.json();
+        
         console.log('Deal created successfully:', result);
-        alert('Deal created successfully!');
+                if (result.data && result.data.id) {
+            const dealId = result.data.id;
+            window.location.href = `https://none-sandbox.pipedrive.com/deal/${dealId}`;
+        } else {
+            alert('Deal created successfully, but could not redirect to the deal page.');
+        }
+
         return result;
         
     } catch (error) {
