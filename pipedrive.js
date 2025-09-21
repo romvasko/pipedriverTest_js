@@ -1,9 +1,4 @@
-import AppExtensionsSDK from '@pipedrive/app-extensions-sdk';
 
-const sdk = await new AppExtensionsSDK({ identifier: 'db6f6128-06e7-43fd-a0c3-6e47122e72b9' })
-  .initialize({ size: { height: 600,
-                        width: 800
-   } });
 
 
 const API_URL = 'https://none-sandbox.pipedrive.com/api/v2/deals';
